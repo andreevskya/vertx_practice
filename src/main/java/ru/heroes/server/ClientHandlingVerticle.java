@@ -1,6 +1,7 @@
 package ru.heroes.server;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
@@ -71,7 +72,8 @@ public class ClientHandlingVerticle extends AbstractVerticle {
                     ++emptyProviders;
                     continue;
                 }
-                client.writeFinalTextFrame(JsonObject.mapFrom(CharacterMovementDtoBuilder.create(movement)).toString());
+                Future<Void> f = client.writeFinalTextFrame(JsonObject.mapFrom(CharacterMovementDtoBuilder.create(movement)).toString());
+                f.onFailure(t -> logger.error("Failed to send data, {}", t.getMessage()));
             }
             if (emptyProviders == charactersMovementProviders.size()) {
                 logger.info("Client \"{}\" has no more movements", client.remoteAddress());
