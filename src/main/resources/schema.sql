@@ -10,15 +10,12 @@ COMMENT ON COLUMN houses.name IS 'Назание дома';
 ------------------------------------------------------------------------------------------------------------------------
 CREATE TABLE characters
 (
-  id bigint NOT NULL,
+  id bigint NOT NULL PRIMARY KEY,
   first_name TEXT,
   last_name TEXT,
-  house_id bigint,
-  CONSTRAINT characters_pkey PRIMARY KEY (id),
-  CONSTRAINT fkca7orb3fs8vt6k2lrl6n7ixwt FOREIGN KEY (house_id)
-      REFERENCES houses (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  house_id bigint
 );
+ALTER TABLE characters ADD CONSTRAINT house_id_constraint FOREIGN KEY (house_id) REFERENCES houses (id);
 COMMENT ON TABLE characters IS 'Справочник персонажей.';
 COMMENT ON COLUMN characters.id IS 'Идентификатор персонажа.';
 COMMENT ON COLUMN characters.first_name IS 'Имя персонажа.';
@@ -27,16 +24,13 @@ COMMENT ON COLUMN characters.house_id IS 'Дом, которому принад�
 ------------------------------------------------------------------------------------------------------------------------
 CREATE TABLE character_movements
 (
-  id bigint NOT NULL,
+  id bigint NOT NULL PRIMARY KEY,
   delay_millis bigint,
   x real,
   y real,
-  character_id bigint,
-  CONSTRAINT character_movements_pkey PRIMARY KEY (id),
-  CONSTRAINT fk1tgiisvu2qaoosia9j8v5cddy FOREIGN KEY (character_id)
-      REFERENCES characters (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  character_id bigint
 );
+ALTER TABLE character_movements ADD CONSTRAINT character_id_constraint FOREIGN KEY (character_id) REFERENCES characters (id);
 COMMENT ON TABLE character_movements IS 'Перемещения персонажей.';
 COMMENT ON COLUMN character_movements.id IS 'Идентификатор перемещения.';
 COMMENT ON COLUMN character_movements.delay_millis IS 'Количество миллисекунд, который следует выждать перед отправкой перемещения клиенту.';
