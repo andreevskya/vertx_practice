@@ -29,12 +29,6 @@ public class CharacterMovementEntity implements Serializable {
     private float y;
 
     /**
-     * Какой-то непонятный параметр. Выпилить.
-     */
-    @Column
-    private int velocity;
-
-    /**
      * Величина задержки в миллисекундах перед следующим перемещением.
      */
     @Column
@@ -108,14 +102,6 @@ public class CharacterMovementEntity implements Serializable {
         this.y = y;
     }
 
-    public int getVelocity() {
-        return velocity;
-    }
-
-    public void setVelocity(int velocity) {
-        this.velocity = velocity;
-    }
-
     /**
      * Возвращает период паузы перед следующим перемещением.
      *
@@ -158,7 +144,6 @@ public class CharacterMovementEntity implements Serializable {
                 "id=" + id +
                 ", x=" + x +
                 ", y=" + y +
-                ", velocity=" + velocity +
                 ", delayMillis=" + delayMillis +
                 ", character=" + character +
                 '}';

@@ -29,7 +29,6 @@ CREATE TABLE character_movements
 (
   id bigint NOT NULL,
   delay_millis bigint,
-  velocity integer,
   x real,
   y real,
   character_id bigint,
@@ -41,7 +40,6 @@ CREATE TABLE character_movements
 COMMENT ON TABLE character_movements IS 'Перемещения персонажей.';
 COMMENT ON COLUMN character_movements.id IS 'Идентификатор перемещения.';
 COMMENT ON COLUMN character_movements.delay_millis IS 'Количество миллисекунд, который следует выждать перед отправкой перемещения клиенту.';
-COMMENT ON COLUMN character_movements.velocity IS 'Я не понял, какую роль здесь играет это поле.';
 COMMENT ON COLUMN character_movements.x IS 'X координата перемещения.';
 COMMENT ON COLUMN character_movements.y IS 'Y координата перемещения.';
 COMMENT ON COLUMN character_movements.character_id IS 'Идентификатор персонажа, над которым выполняется перемещение.';

@@ -32,10 +32,9 @@ def generate_sql_insert_script(fileList):
             characterIdIndex += 1
 
             for waypoint in content["wayPoints"]:
-                waypoints.append("INSERT INTO character_movements(id, delay_millis, velocity, x, y, character_id) VALUES(%d, %d, %d, %.2f, %.2f, %d);" % (
+                waypoints.append("INSERT INTO character_movements(id, delay_millis, x, y, character_id) VALUES(%d, %d, %.2f, %.2f, %d);" % (
                 waypointIdIndex,
                 waypoint['delayMillis'],
-                waypoint['velocity'],
                 waypoint['x'],
                 waypoint['y'],
                 namesIdIndex
