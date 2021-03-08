@@ -72,6 +72,8 @@ public class ClientHandlingVerticle extends AbstractVerticle {
                     ++emptyProviders;
                     continue;
                 }
+                // Обработка сценария, когда некоторые сообщения не дошли, не сделана сознательно:
+                // пусть лучше клиент скачет, чем вечно остаёт или получает данные рывками.
                 Future<Void> f = client.writeFinalTextFrame(JsonObject.mapFrom(CharacterMovementDtoBuilder.create(movement)).toString());
                 f.onFailure(t -> logger.error("Failed to send data, {}", t.getMessage()));
             }
