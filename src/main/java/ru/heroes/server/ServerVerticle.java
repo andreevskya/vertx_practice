@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import ru.heroes.server.data.repositories.CharacterMovementRepository;
 import ru.heroes.server.data.repositories.CharacterRepository;
 
+/**
+ * Сервер приложения. Обслуживает клиентов, раздаёт статику.
+ */
 @Service
 public class ServerVerticle extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(ServerVerticle.class);

@@ -14,17 +14,38 @@ import ru.heroes.server.data.repositories.CharacterRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Обслуживатель пользовательского соединения. Отдаёт пользователю перемещения.
+ */
 public class ClientHandlingVerticle extends AbstractVerticle {
+    /**
+     * Период обновления данных.
+     */
     public static final int TICK_DURATION_MS = 1_000;
+
     private static final Logger logger = LoggerFactory.getLogger(ClientHandlingVerticle.class);
 
-
+    /**
+     * Клиентское соединение.
+     */
     private ServerWebSocket client;
+
+    /**
+     * Список провайдеров перемещений. По одному на каждого персонажа.
+     */
     private List<CharacterMovementProvider> charactersMovementProviders = new ArrayList<>();
 
-    public ClientHandlingVerticle(ServerWebSocket client, CharacterMovementRepository repo, CharacterRepository characterRepo) {
+    /**
+     * Конструктор класса. Создаёт новый экземпляр класса {@link ClientHandlingVerticle}
+     *
+     * @param client        пользовательское соединение, которое будет обслуживаться.
+     * @param movementRepo  репа передвижений.
+     * @param characterRepo репа персонажей.
+     */
+    public ClientHandlingVerticle(ServerWebSocket client, CharacterMovementRepository movementRepo, CharacterRepository characterRepo) {
         this.client = client;
         this.client.closeHandler(c -> {
+            logger.info("Client disconnected");
             try {
                 stop();
             } catch (Exception e) {
@@ -32,13 +53,15 @@ public class ClientHandlingVerticle extends AbstractVerticle {
             }
         });
         for (CharacterEntity c : characterRepo.findAll()) {
-            charactersMovementProviders.add(new CharacterMovementProvider(c, repo));
+            charactersMovementProviders.add(new CharacterMovementProvider(c, movementRepo));
         }
     }
 
     @Override
     public void start() throws Exception {
         super.start();
+        // Было сказано обновлять данные на клиенте каждые n миллисекунд, вне зависимости от
+        // есть у нас что-то новенькое или нет. Посему так и делаем.
         vertx.setPeriodic(TICK_DURATION_MS, c -> {
             long startTime = System.currentTimeMillis();
             int emptyProviders = 0;
@@ -51,10 +74,10 @@ public class ClientHandlingVerticle extends AbstractVerticle {
                 client.writeFinalTextFrame(JsonObject.mapFrom(CharacterMovementDtoBuilder.create(movement)).toString());
             }
             if (emptyProviders == charactersMovementProviders.size()) {
-                logger.info("Client \"{}\" has not more movements", client.remoteAddress());
+                logger.info("Client \"{}\" has no more movements", client.remoteAddress());
             }
             long elapsed = System.currentTimeMillis();
-            if(elapsed - startTime > 1000) {
+            if (elapsed - startTime > 1000) {
                 logger.warn("Can't keep up! Waypoint processing took {} ms, expected <= {} ms", elapsed - startTime, TICK_DURATION_MS);
             }
         });

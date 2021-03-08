@@ -9,6 +9,9 @@ import org.springframework.context.annotation.ComponentScan;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * Запускалка-стартовалка Vert.x сервера.
+ */
 @EnableAutoConfiguration
 @EnableConfigurationProperties
 @ComponentScan("ru.heroes.server")
