@@ -48,7 +48,7 @@ public class ClientHandlingVerticle extends AbstractVerticle {
         this.client.closeHandler(c -> {
             logger.info("Client disconnected");
             try {
-                stop();
+                vertx.undeploy(this.deploymentID());
             } catch (Exception e) {
                 e.printStackTrace();
             }
